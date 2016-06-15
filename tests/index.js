@@ -1,11 +1,11 @@
 var StaticServer = require('static-server'),
     hostServer = new StaticServer({
         rootPath: './tests/host',
-        port: 9123
+        port: 9123,
     }),
     guestServer = new StaticServer({
         rootPath: './tests/guest',
-        port: 9124
+        port: 9124,
     }),
     fs = require('fs'),
     open = require('open'),
@@ -16,14 +16,14 @@ var StaticServer = require('static-server'),
         cache: {},
         packageCache: {},
         plugin: [watchify],
-        debug: true
+        debug: true,
     }),
     guestBundler = browserify({
         entries: ['tests/guest/index.js'],
         cache: {},
         packageCache: {},
         plugin: [watchify],
-        debug: true
+        debug: true,
     });
 
 function bundleHost() {

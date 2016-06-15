@@ -4,19 +4,19 @@ var getId = require('../getId'),
 module.exports = function storageHost(allowedDomains) {
     function handleMessage(event) {
         var data = event.data,
-            domain = allowedDomains.find(function(domain) {
+            domain = allowedDomains.find(function (domain) {
                 return event.origin === domain.origin;
             }),
             id = getId(data);
 
-        if(!id) {
+        if (!id) {
             return;
         }
 
-        if(!domain) {
+        if (!domain) {
             event.source.postMessage({
                 id: id,
-                error: event.origin + ' is not an allowed domain'
+                error: event.origin + ' is not an allowed domain',
             }, event.origin);
 
             return;
@@ -24,10 +24,10 @@ module.exports = function storageHost(allowedDomains) {
 
         var method = data.method;
 
-        if(!~domain.allowedMethods.indexOf(method) && method !== 'connect') {
+        if (!~domain.allowedMethods.indexOf(method) && method !== 'connect') {
             event.source.postMessage({
                 id: id,
-                error: method + ' is not an allowed method from ' + event.origin
+                error: method + ' is not an allowed method from ' + event.origin,
             }, event.origin);
 
             return;

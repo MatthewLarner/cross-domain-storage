@@ -1,55 +1,54 @@
 
-var crel = require('crel'),
-    prefix = 'sessionAccessId-',
-    getId = require('../getId'),
-    sessionRequests = [],
-    connected = false;
-
-function createId() {
-    return prefix + Date.now();
-}
-
-var iframe,
-    contentWindow,
-    callbacks = {};
-
-function handleMessage(event) {
-    var response = event.data,
-        sessionAccessId = getId(response);
-
-    if(sessionAccessId === 'sessionAccessId-connected') {
-        connected = true;
-        return;
-    }
-
-    var callback = callbacks[sessionAccessId];
-
-    if(sessionAccessId && callback) {
-        callback(response.error, response.data);
-    }
-}
-
-
-function close() {
-    window.removeEventListener('message', handleMessage);
-    iframe.remove();
-}
+var crel = require('crel');
+var prefix = 'sessionAccessId-';
+var getId = require('../getId');
 
 module.exports = function storageGuest(source, parent) {
     parent = parent || document.body;
 
+    var iframe;
+    var contentWindow;
+    var callbacks = {};
+    var sessionRequests = [];
+    var connected = false;
+
     iframe = crel('iframe', {
-            src: source,
-            width: 0,
-            height: 0,
-            style: 'display: none;'
-        }
-    );
+        src: source,
+        width: 0,
+        height: 0,
+        style: 'display: none;',
+    });
 
     parent.appendChild(iframe);
 
+    function createId() {
+        return prefix + Date.now();
+    }
+
+    function handleMessage(event) {
+        var response = event.data;
+        var sessionAccessId = getId(response);
+
+        if (sessionAccessId === 'sessionAccessId-connected') {
+            connected = true;
+            return;
+        }
+
+        var callback = callbacks[sessionAccessId];
+
+        if (sessionAccessId && callback) {
+            callback(response.error, response.data);
+        }
+    }
+
+
+    function close() {
+        window.removeEventListener('message', handleMessage);
+        iframe.remove();
+    }
+
     function message(method, key, value, callback) {
-        if(!connected && method !== 'connect') {
+        if (!connected && method !== 'connect') {
             sessionRequests.push(Array.prototype.slice.call(arguments));
         }
 
@@ -61,13 +60,13 @@ module.exports = function storageGuest(source, parent) {
             method: method,
             key: key,
             value: value,
-            id: id
+            id: id,
         }, source);
     }
 
     function get(key, callback) {
-        if(!callback) {
-            throw(new Error('callback required for get'));
+        if (!callback) {
+            throw (new Error('callback required for get'));
         }
 
         message('get', key, null, callback);
@@ -83,7 +82,7 @@ module.exports = function storageGuest(source, parent) {
 
     function checkConnected() {
         if (connected) {
-            while(sessionRequests.length) {
+            while (sessionRequests.length) {
                 message.apply(null, sessionRequests.pop());
             }
 
@@ -95,7 +94,7 @@ module.exports = function storageGuest(source, parent) {
         setTimeout(checkConnected, 100);
     }
 
-    if(!contentWindow) {
+    if (!contentWindow) {
         contentWindow = iframe.contentWindow;
 
         window.addEventListener('message', handleMessage);
@@ -103,10 +102,10 @@ module.exports = function storageGuest(source, parent) {
         checkConnected();
     }
 
-    storageGuest.get = get;
-    storageGuest.set = set;
-    storageGuest.remove = remove;
-    storageGuest.close = close;
-
-    return storageGuest;
+    return {
+        get: get,
+        set: set,
+        remove: remove,
+        close: close,
+    };
 };

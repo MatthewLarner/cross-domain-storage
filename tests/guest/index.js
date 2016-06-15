@@ -3,21 +3,21 @@ var crel = require('crel'),
     createStorageGuest = require('../../guest');
 
 var instructions = crel('div', {
-        class: 'instructions'
-    },
+    class: 'instructions',
+},
     crel('h3', 'cross-domain-storage guest')
 );
 
-doc.ready(function() {
+doc.ready(function () {
     crel(document.body,
         instructions
     );
 
     var storageGuest = createStorageGuest('http://localhost:9123');
 
-    //TODO: actually write some tests here
+    // TODO: actually write some tests here
 
-    storageGuest.get('foo', function(error, data) {
+    storageGuest.get('foo', function (error, data) {
         console.log('foo:', arguments);
     });
 
