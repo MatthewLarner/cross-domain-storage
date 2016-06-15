@@ -1,0 +1,34 @@
+{
+  "name": "cross-domain-storage",
+  "version": "1.0.0",
+  "description": "Cross domain local storage",
+  "main": "index.js",
+  "scripts": {
+    "test": "node tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MatthewLarner/cross-domain-storage.git"
+  },
+  "author": "Matt Larner <matt.larner.dev@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MatthewLarner/cross-domain-storage/issues"
+  },
+  "homepage": "https://github.com/MatthewLarner/cross-domain-storage#readme",
+  "dependencies": {
+    "crel": "^3.0.0",
+    "try-parse-json": "^1.0.0"
+  },
+  "devDependencies": {
+    "automagic-ui": "^1.1.0",
+    "file-server": "^1.0.5",
+    "browserify": "^13.0.0",
+    "crel": "^3.0.0",
+    "doc-js": "^1.3.1",
+    "open": "0.0.5",
+    "static-server": "^2.0.2",
+    "tape": "^4.5.1",
+    "watchify": "^3.7.0"
+  }
+}
