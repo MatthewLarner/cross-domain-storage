@@ -1,13 +1,13 @@
-var getId = require('../getId'),
-    methods = require('./methods');
+var getId = require('../getId');
+var methods = require('./methods');
 
 module.exports = function storageHost(allowedDomains) {
     function handleMessage(event) {
-        var data = event.data,
-            domain = allowedDomains.find(function (domain) {
-                return event.origin === domain.origin;
-            }),
-            id = getId(data);
+        var data = event.data;
+        var domain = allowedDomains.find(function (allowedDomain) {
+            return event.origin === allowedDomain.origin;
+        });
+        var id = getId(data);
 
         if (!id) {
             return;
