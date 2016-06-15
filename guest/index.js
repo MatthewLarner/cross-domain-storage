@@ -11,6 +11,8 @@ module.exports = function storageGuest(source, parent) {
     var callbacks = {};
     var sessionRequests = [];
     var connected = false;
+    var closed = true;
+    var connectedTimeout;
 
     iframe = crel('iframe', {
         src: source,
@@ -19,7 +21,16 @@ module.exports = function storageGuest(source, parent) {
         style: 'display: none;',
     });
 
-    parent.appendChild(iframe);
+    function openStorage() {
+        parent.appendChild(iframe);
+        contentWindow = iframe.contentWindow;
+        closed = false;
+
+        window.addEventListener('message', handleMessage);
+
+        checkConnected();
+    }
+    openStorage();
 
     function createId() {
         return prefix + Date.now();
@@ -41,13 +52,19 @@ module.exports = function storageGuest(source, parent) {
         }
     }
 
-
     function close() {
+        clearTimeout(connectedTimeout);
         window.removeEventListener('message', handleMessage);
         iframe.remove();
+        connected = false;
+        closed = true;
     }
 
     function message(method, key, value, callback) {
+        if (closed) {
+            openStorage();
+        }
+
         if (!connected && method !== 'connect') {
             sessionRequests.push(Array.prototype.slice.call(arguments));
         }
@@ -82,6 +99,7 @@ module.exports = function storageGuest(source, parent) {
 
     function checkConnected() {
         if (connected) {
+            clearTimeout(connectedTimeout);
             while (sessionRequests.length) {
                 message.apply(null, sessionRequests.pop());
             }
@@ -91,15 +109,7 @@ module.exports = function storageGuest(source, parent) {
 
         message('connect');
 
-        setTimeout(checkConnected, 100);
-    }
-
-    if (!contentWindow) {
-        contentWindow = iframe.contentWindow;
-
-        window.addEventListener('message', handleMessage);
-
-        checkConnected();
+        connectedTimeout = setTimeout(checkConnected, 125);
     }
 
     return {
