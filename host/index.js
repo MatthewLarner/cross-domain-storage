@@ -42,7 +42,7 @@ module.exports = function storageHost(allowedDomains) {
 
     window.addEventListener('message', handleMessage);
 
-    storageHost.close = close;
-
-    return storageHost;
+    return {
+        close: close,
+    };
 };

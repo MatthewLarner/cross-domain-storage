@@ -3,6 +3,10 @@ var crel = require('crel');
 var prefix = 'sessionAccessId-';
 var getId = require('../getId');
 
+function createId() {
+    return prefix + Date.now();
+}
+
 module.exports = function storageGuest(source, parent) {
     parent = parent || document.body;
 
@@ -31,10 +35,6 @@ module.exports = function storageGuest(source, parent) {
         checkConnected();
     }
     openStorage();
-
-    function createId() {
-        return prefix + Date.now();
-    }
 
     function handleMessage(event) {
         var response = event.data;
@@ -66,7 +66,7 @@ module.exports = function storageGuest(source, parent) {
         }
 
         if (!connected && method !== 'connect') {
-            sessionRequests.push(Array.prototype.slice.call(arguments));
+            sessionRequests.push(arguments);
         }
 
         var id = createId();
