@@ -3,7 +3,7 @@ var prefix = 'sessionAccessId-';
 function getId(data) {
     var id;
 
-    if(data && data.id && ~data.id.indexOf(prefix)) {
+    if (data && data.id && ~data.id.indexOf(prefix)) {
         id = data.id;
     }
 

@@ -1,56 +1,72 @@
 
-var crel = require('crel'),
-    prefix = 'sessionAccessId-',
-    getId = require('../getId'),
-    sessionRequests = [],
-    connected = false;
+var crel = require('crel');
+var prefix = 'sessionAccessId-';
+var getId = require('../getId');
 
 function createId() {
     return prefix + Date.now();
 }
 
-var iframe,
-    contentWindow,
-    callbacks = {};
-
-function handleMessage(event) {
-    var response = event.data,
-        sessionAccessId = getId(response);
-
-    if(sessionAccessId === 'sessionAccessId-connected') {
-        connected = true;
-        return;
-    }
-
-    var callback = callbacks[sessionAccessId];
-
-    if(sessionAccessId && callback) {
-        callback(response.error, response.data);
-    }
-}
-
-
-function close() {
-    window.removeEventListener('message', handleMessage);
-    iframe.remove();
-}
-
 module.exports = function storageGuest(source, parent) {
     parent = parent || document.body;
 
-    iframe = crel('iframe', {
-            src: source,
-            width: 0,
-            height: 0,
-            style: 'display: none;'
-        }
-    );
+    var iframe;
+    var contentWindow;
+    var callbacks = {};
+    var sessionRequests = [];
+    var connected = false;
+    var closed = true;
+    var connectedTimeout;
 
-    parent.appendChild(iframe);
+    iframe = crel('iframe', {
+        src: source,
+        width: 0,
+        height: 0,
+        style: 'display: none;',
+    });
+
+    function openStorage() {
+        parent.appendChild(iframe);
+        contentWindow = iframe.contentWindow;
+        closed = false;
+
+        window.addEventListener('message', handleMessage);
+
+        checkConnected();
+    }
+    openStorage();
+
+    function handleMessage(event) {
+        var response = event.data;
+        var sessionAccessId = getId(response);
+
+        if (sessionAccessId === 'sessionAccessId-connected') {
+            connected = true;
+            return;
+        }
+
+        var callback = callbacks[sessionAccessId];
+
+        if (sessionAccessId && callback) {
+            callback(response.error, response.data);
+        }
+    }
+
+    function close() {
+        clearTimeout(connectedTimeout);
+        window.removeEventListener('message', handleMessage);
+        iframe.remove();
+        connected = false;
+        closed = true;
+    }
 
     function message(method, key, value, callback) {
-        if(!connected && method !== 'connect') {
-            sessionRequests.push(Array.prototype.slice.call(arguments));
+        if (closed) {
+            openStorage();
+        }
+
+        if (!connected && method !== 'connect') {
+            sessionRequests.push(arguments);
         }
 
         var id = createId();
@@ -61,13 +77,13 @@ module.exports = function storageGuest(source, parent) {
             method: method,
             key: key,
             value: value,
-            id: id
+            id: id,
         }, source);
     }
 
     function get(key, callback) {
-        if(!callback) {
-            throw(new Error('callback required for get'));
+        if (!callback) {
+            throw (new Error('callback required for get'));
         }
 
         message('get', key, null, callback);
@@ -83,7 +99,8 @@ module.exports = function storageGuest(source, parent) {
 
     function checkConnected() {
         if (connected) {
-            while(sessionRequests.length) {
+            clearTimeout(connectedTimeout);
+            while (sessionRequests.length) {
                 message.apply(null, sessionRequests.pop());
             }
 
@@ -92,21 +109,13 @@ module.exports = function storageGuest(source, parent) {
 
         message('connect');
 
-        setTimeout(checkConnected, 100);
+        connectedTimeout = setTimeout(checkConnected, 125);
     }
 
-    if(!contentWindow) {
-        contentWindow = iframe.contentWindow;
-
-        window.addEventListener('message', handleMessage);
-
-        checkConnected();
-    }
-
-    storageGuest.get = get;
-    storageGuest.set = set;
-    storageGuest.remove = remove;
-    storageGuest.close = close;
-
-    return storageGuest;
+    return {
+        get: get,
+        set: set,
+        remove: remove,
+        close: close,
+    };
 };

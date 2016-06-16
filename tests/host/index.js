@@ -3,12 +3,12 @@ var crel = require('crel'),
     createStorageHost = require('../../host');
 
 var instructions = crel('div', {
-        class: 'instructions'
-    },
+    class: 'instructions',
+},
     crel('h3', 'cross-domain-storage host')
 );
 
-doc.ready(function() {
+doc.ready(function () {
     crel(document.body,
         instructions
     );
@@ -18,8 +18,8 @@ doc.ready(function() {
     var storageHost = createStorageHost([
         {
             origin: 'http://localhost:9124',
-            allowedMethods: ['get', 'set', 'remove']
-        }
+            allowedMethods: ['get', 'set', 'remove'],
+        },
     ]);
 
     // At some point - storageHost.close()

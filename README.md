@@ -47,7 +47,8 @@ Any methods that are called while connecting are queued up and handled seamlessl
 
 ```javascript
 // Hosted on http://www.foo.com
-var bazStorage = createGuest('http://www.baz.com/accessStorage');                         ```
+var bazStorage = createGuest('http://www.baz.com/accessStorage');                         
+```
 
 #### guest.get(key, callback)
 
