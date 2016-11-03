@@ -16,6 +16,7 @@ module.exports = function storageHost(allowedDomains) {
         if (!domain) {
             event.source.postMessage({
                 id: id,
+                connectError: true,
                 error: event.origin + ' is not an allowed domain',
             }, event.origin);
 

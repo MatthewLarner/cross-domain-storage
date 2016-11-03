@@ -45,6 +45,18 @@ module.exports = function storageGuest(source, parent) {
             return;
         }
 
+        if (response.connectError) {
+            for (var key in callbacks) {
+                if (callbacks[key]) {
+                    callbacks[key](response.error);
+                }
+            }
+
+            callbacks = {};
+
+            return;
+        }
+
         var callback = callbacks[sessionAccessId];
 
         if (sessionAccessId && callback) {
