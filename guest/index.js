@@ -67,7 +67,7 @@ module.exports = function storageGuest(source, parent) {
     function close() {
         clearTimeout(connectedTimeout);
         window.removeEventListener('message', handleMessage);
-        iframe.remove();
+        iframe.parentNode.removeChild(iframe);
         connected = false;
         closed = true;
     }
