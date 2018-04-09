@@ -1,4 +1,3 @@
-
 var crel = require('crel');
 var prefix = 'sessionAccessId-';
 var getId = require('../getId');
@@ -17,12 +16,16 @@ module.exports = function storageGuest(source, parent) {
     var connected = false;
     var closed = true;
     var connectedTimeout;
+    var isLoaded = false;
 
     iframe = crel('iframe', {
         src: source,
         width: 0,
         height: 0,
         style: 'display: none;',
+        onload: function() {
+            isLoaded = true;
+        },
     });
 
     function openStorage() {
@@ -34,6 +37,7 @@ module.exports = function storageGuest(source, parent) {
 
         checkConnected();
     }
+
     openStorage();
 
     function handleMessage(event) {
@@ -85,17 +89,22 @@ module.exports = function storageGuest(source, parent) {
 
         callbacks[id] = callback;
 
-        contentWindow.postMessage({
-            method: method,
-            key: key,
-            value: value,
-            id: id,
-        }, source);
+        if (isLoaded) {
+            contentWindow.postMessage(
+                {
+                    method: method,
+                    key: key,
+                    value: value,
+                    id: id,
+                },
+                source,
+            );
+        }
     }
 
     function get(key, callback) {
         if (!callback) {
-            throw (new Error('callback required for get'));
+            throw new Error('callback required for get');
         }
 
         message('get', key, null, callback);
