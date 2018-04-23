@@ -97,7 +97,7 @@ module.exports = function storageGuest(source, parent) {
                     value: value,
                     id: id,
                 },
-                source,
+                source
             );
         }
     }
