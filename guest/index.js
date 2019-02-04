@@ -111,7 +111,7 @@ module.exports = function storageGuest(source, parent) {
     }
 
     function set(key, value, callback) {
-        message('set', key, value, null, callback);
+        message('set', key, value, callback);
     }
 
     function remove(key, callback) {
