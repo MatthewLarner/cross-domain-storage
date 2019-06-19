@@ -29,6 +29,6 @@
     "open": "0.0.5",
     "static-server": "^2.0.2",
     "tape": "^4.9.2",
-    "watchify": "^3.7.0"
+    "watchify": "^3.11.1"
   }
 }
