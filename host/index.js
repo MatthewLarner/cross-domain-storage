@@ -1,35 +1,39 @@
-var getId = require('../getId');
-var methods = require('./methods');
+const getId = require('../getId');
+const methods = require('./methods');
 
 module.exports = function storageHost(allowedDomains) {
     function handleMessage(event) {
-        var data = event.data;
-        var domain = allowedDomains.find(function (allowedDomain) {
-            return event.origin === allowedDomain.origin;
-        });
-        var id = getId(data);
+        const { data } = event;
+        const domain = allowedDomains.find(allowedDomain => event.origin === allowedDomain.origin);
+        const id = getId(data);
 
         if (!id) {
             return;
         }
 
         if (!domain) {
-            event.source.postMessage({
-                id: id,
-                connectError: true,
-                error: event.origin + ' is not an allowed domain',
-            }, event.origin);
+            event.source.postMessage(
+                {
+                    id,
+                    connectError: true,
+                    error: `${event.origin} is not an allowed domain`,
+                },
+                event.origin,
+            );
 
             return;
         }
 
-        var method = data.method;
+        const { method } = data;
 
         if (!~domain.allowedMethods.indexOf(method) && method !== 'connect') {
-            event.source.postMessage({
-                id: id,
-                error: method + ' is not an allowed method from ' + event.origin,
-            }, event.origin);
+            event.source.postMessage(
+                {
+                    id,
+                    error: `${method} is not an allowed method from ${event.origin}`,
+                },
+                event.origin,
+            );
 
             return;
         }
@@ -44,6 +48,6 @@ module.exports = function storageHost(allowedDomains) {
     window.addEventListener('message', handleMessage);
 
     return {
-        close: close,
+        close,
     };
 };

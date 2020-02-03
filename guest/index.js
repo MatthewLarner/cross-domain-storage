@@ -1,6 +1,7 @@
-var crel = require('crel');
-var prefix = 'sessionAccessId-';
-var getId = require('../getId');
+const crel = require('crel');
+const getId = require('../getId');
+
+const prefix = 'sessionAccessId-';
 
 function createId() {
     return prefix + Date.now();
@@ -9,21 +10,20 @@ function createId() {
 module.exports = function storageGuest(source, parent) {
     parent = parent || document.body;
 
-    var iframe;
-    var contentWindow;
-    var callbacks = {};
-    var sessionRequests = [];
-    var connected = false;
-    var closed = true;
-    var connectedTimeout;
-    var isLoaded = false;
+    let contentWindow;
+    let callbacks = {};
+    const sessionRequests = [];
+    let connected = false;
+    let closed = true;
+    let connectedTimeout;
+    let isLoaded = false;
 
-    iframe = crel('iframe', {
+    const iframe = crel('iframe', {
         src: source,
         width: 0,
         height: 0,
         style: 'display: none;',
-        onload: function() {
+        onload() {
             isLoaded = true;
         },
     });
@@ -41,8 +41,8 @@ module.exports = function storageGuest(source, parent) {
     openStorage();
 
     function handleMessage(event) {
-        var response = event.data;
-        var sessionAccessId = getId(response);
+        const response = event.data;
+        const sessionAccessId = getId(response);
 
         if (sessionAccessId === 'sessionAccessId-connected') {
             connected = true;
@@ -50,18 +50,12 @@ module.exports = function storageGuest(source, parent) {
         }
 
         if (response.connectError) {
-            for (var key in callbacks) {
-                if (callbacks[key]) {
-                    callbacks[key](response.error);
-                }
-            }
-
+            Object.keys(callbacks).forEach(key => callbacks[key](response.error));
             callbacks = {};
-
             return;
         }
 
-        var callback = callbacks[sessionAccessId];
+        const callback = callbacks[sessionAccessId];
 
         if (sessionAccessId && callback) {
             callback(response.error, response.data);
@@ -82,22 +76,22 @@ module.exports = function storageGuest(source, parent) {
         }
 
         if (!connected && method !== 'connect') {
-            sessionRequests.push(arguments);
+            sessionRequests.push([method, key, value, callback]);
         }
 
-        var id = createId();
+        const id = createId();
 
         callbacks[id] = callback;
 
         if (isLoaded) {
             contentWindow.postMessage(
                 {
-                    method: method,
-                    key: key,
-                    value: value,
-                    id: id,
+                    method,
+                    key,
+                    value,
+                    id,
                 },
-                source
+                source,
             );
         }
     }
@@ -122,7 +116,7 @@ module.exports = function storageGuest(source, parent) {
         if (connected) {
             clearTimeout(connectedTimeout);
             while (sessionRequests.length) {
-                message.apply(null, sessionRequests.pop());
+                message(...sessionRequests.pop());
             }
 
             return;
@@ -134,9 +128,9 @@ module.exports = function storageGuest(source, parent) {
     }
 
     return {
-        get: get,
-        set: set,
-        remove: remove,
-        close: close,
+        get,
+        set,
+        remove,
+        close,
     };
 };
