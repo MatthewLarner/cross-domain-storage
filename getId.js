@@ -1,7 +1,7 @@
-var prefix = 'sessionAccessId-';
+const prefix = 'sessionAccessId-';
 
 function getId(data) {
-    var id;
+    let id;
 
     if (data && data.id && ~data.id.indexOf(prefix)) {
         id = data.id;

@@ -1,30 +1,32 @@
-var StaticServer = require('static-server'),
-    hostServer = new StaticServer({
-        rootPath: './tests/host',
-        port: 9123,
-    }),
-    guestServer = new StaticServer({
-        rootPath: './tests/guest',
-        port: 9124,
-    }),
-    fs = require('fs'),
-    open = require('open'),
-    browserify = require('browserify'),
-    watchify = require('watchify'),
-    hostBundler = browserify({
-        entries: ['tests/host/index.js'],
-        cache: {},
-        packageCache: {},
-        plugin: [watchify],
-        debug: true,
-    }),
-    guestBundler = browserify({
-        entries: ['tests/guest/index.js'],
-        cache: {},
-        packageCache: {},
-        plugin: [watchify],
-        debug: true,
-    });
+const StaticServer = require('static-server');
+
+const hostServer = new StaticServer({
+    rootPath: './tests/host',
+    port: 9123,
+});
+const guestServer = new StaticServer({
+    rootPath: './tests/guest',
+    port: 9124,
+});
+const fs = require('fs');
+const open = require('open');
+const browserify = require('browserify');
+const watchify = require('watchify');
+
+const hostBundler = browserify({
+    entries: ['tests/host/index.js'],
+    cache: {},
+    packageCache: {},
+    plugin: [watchify],
+    debug: true,
+});
+const guestBundler = browserify({
+    entries: ['tests/guest/index.js'],
+    cache: {},
+    packageCache: {},
+    plugin: [watchify],
+    debug: true,
+});
 
 function bundleHost() {
     hostBundler.bundle().pipe(fs.createWriteStream('./tests/host/index.browser.js'));

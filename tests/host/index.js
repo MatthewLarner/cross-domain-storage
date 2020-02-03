@@ -1,21 +1,21 @@
-var crel = require('crel'),
-    doc = require('doc-js'),
-    createStorageHost = require('../../host');
+const crel = require('crel');
+const doc = require('doc-js');
+const createStorageHost = require('../../host');
 
-var instructions = crel('div', {
-    class: 'instructions',
-},
-    crel('h3', 'cross-domain-storage host')
+const instructions = crel(
+    'div',
+    {
+        class: 'instructions',
+    },
+    crel('h3', 'cross-domain-storage host'),
 );
 
-doc.ready(function () {
-    crel(document.body,
-        instructions
-    );
+doc.ready(() => {
+    crel(document.body, instructions);
 
-    window.localStorage.setItem('foo', JSON.stringify('bar'));
+    window.localStorage.setItem('foo', 'bar');
 
-    var storageHost = createStorageHost([
+    createStorageHost([
         {
             origin: 'http://localhost:9124',
             allowedMethods: ['get', 'set', 'remove'],
