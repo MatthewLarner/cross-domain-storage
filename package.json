@@ -1,6 +1,6 @@
 {
     "name": "cross-domain-storage",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "Cross domain local storage",
     "main": "./distribution/index.js",
     "scripts": {
