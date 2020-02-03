@@ -1,6 +1,6 @@
 const crel = require('crel');
 const doc = require('doc-js');
-const createStorageGuest = require('../../guest');
+const createStorageGuest = require('../../source/guest');
 
 const instructions = crel('div', crel('h3', 'cross-domain-storage guest'), 'If not all green then view the console.');
 
