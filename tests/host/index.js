@@ -1,6 +1,6 @@
 const crel = require('crel');
 const doc = require('doc-js');
-const createStorageHost = require('../../host');
+const createStorageHost = require('../../source/host');
 
 const instructions = crel(
     'div',
