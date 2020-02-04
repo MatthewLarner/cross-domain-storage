@@ -36,5 +36,8 @@ node_modules
 .eslintignore
 .prettierrc
 
+# tests
+tests
+
 # ES6 Source
 source
