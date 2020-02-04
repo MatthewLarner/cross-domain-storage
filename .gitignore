@@ -32,5 +32,12 @@ node_modules
 # Optional REPL history
 .node_repl_history
 
+# Mac files
+.DS_Store
+
+# MS Derp
+.vs
+.vscode
+
 # ES5 distribution code
 distribution
