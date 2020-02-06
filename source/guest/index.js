@@ -1,4 +1,3 @@
-const crel = require('crel');
 const getId = require('../getId');
 
 const prefix = 'sessionAccessId-';
@@ -18,15 +17,14 @@ module.exports = function storageGuest(source, parent) {
     let connectedTimeout;
     let isLoaded = false;
 
-    const iframe = crel('iframe', {
-        src: source,
-        width: 0,
-        height: 0,
-        style: 'display: none;',
-        onload: () => {
-            isLoaded = true;
-        },
-    });
+    const iframe = document.createElement('iframe');
+    iframe.src = source;
+    iframe.width = 0;
+    iframe.height = 0;
+    iframe.styled = 'display: none;';
+    iframe.onload = () => {
+        isLoaded = true;
+    };
 
     function openStorage() {
         parent.appendChild(iframe);
