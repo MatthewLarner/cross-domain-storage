@@ -79,7 +79,9 @@ module.exports = function storageGuest(source, parent) {
 
         const id = createId();
 
-        callbacks[id] = callback;
+        if (callbacks && typeof callback === 'function') {
+            callbacks[id] = callback;
+        }
 
         if (isLoaded) {
             contentWindow.postMessage(
