@@ -4,7 +4,12 @@ const methods = require('./methods');
 module.exports = function storageHost(allowedDomains) {
     function handleMessage(event) {
         const { data } = event;
-        const domain = allowedDomains.find(allowedDomain => event.origin === allowedDomain.origin);
+        const origin = event.origin || '';
+
+        const domain = allowedDomains.find(
+            (allowedDomain) => origin === allowedDomain.origin || origin.match(allowedDomain.origin),
+        );
+
         const id = getId(data);
 
         if (!id) {

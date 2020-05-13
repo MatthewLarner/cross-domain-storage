@@ -17,7 +17,7 @@ doc.ready(() => {
 
     createStorageHost([
         {
-            origin: 'http://localhost:9124',
+            origin: /http:\/\/localhost:9124/,
             allowedMethods: ['get', 'set', 'remove'],
         },
     ]);
