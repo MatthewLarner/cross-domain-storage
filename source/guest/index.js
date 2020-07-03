@@ -21,7 +21,7 @@ module.exports = function storageGuest(source, parent) {
     iframe.src = source;
     iframe.width = 0;
     iframe.height = 0;
-    iframe.styled = 'display: none;';
+    iframe.style = 'display: none;';
     iframe.onload = () => {
         isLoaded = true;
     };
