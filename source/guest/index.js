@@ -48,7 +48,8 @@ module.exports = function storageGuest(source, parent) {
         }
 
         if (response.connectError) {
-            Object.keys(callbacks).forEach(key => callbacks[key](response.error));
+            clearTimeout(connectedTimeout);
+            Object.keys(callbacks).forEach((key) => callbacks[key](response.error));
             callbacks = {};
             return;
         }
