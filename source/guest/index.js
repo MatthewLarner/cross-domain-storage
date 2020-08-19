@@ -21,7 +21,7 @@ module.exports = function storageGuest(source, parent) {
     iframe.src = source;
     iframe.width = 0;
     iframe.height = 0;
-    iframe.style = 'display: none;';
+    iframe.style.display = 'none;';
     iframe.onload = () => {
         isLoaded = true;
     };
@@ -48,7 +48,7 @@ module.exports = function storageGuest(source, parent) {
         }
 
         if (response.connectError) {
-            Object.keys(callbacks).forEach(key => callbacks[key](response.error));
+            Object.keys(callbacks).forEach((key) => callbacks[key](response.error));
             callbacks = {};
             return;
         }
