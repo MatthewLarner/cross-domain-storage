@@ -5,7 +5,6 @@ const createStorageGuest = require('../../source/guest');
 const instructions = crel('div', crel('h3', 'cross-domain-storage guest'), 'If not all green then view the console.');
 
 /* eslint-disable */
-
 // TODO: Make actualy tests not just this nested nightmare
 doc.ready(() => {
     crel(document.body, instructions);

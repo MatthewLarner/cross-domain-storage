@@ -112,6 +112,22 @@ module.exports = function storageGuest(source, parent) {
         message('remove', key, null, callback);
     }
 
+    function getSession(key, callback) {
+        if (!callback) {
+            throw new Error('callback required for get');
+        }
+
+        message('getSession', key, null, callback);
+    }
+
+    function setSession(key, value, callback) {
+        message('setSession', key, value, callback);
+    }
+
+    function removeSession(key, callback) {
+        message('removeSession', key, null, callback);
+    }
+
     function checkConnected() {
         if (connected) {
             clearTimeout(connectedTimeout);
@@ -131,6 +147,9 @@ module.exports = function storageGuest(source, parent) {
         get,
         set,
         remove,
+        getSession,
+        setSession,
+        removeSession,
         close,
     };
 };
