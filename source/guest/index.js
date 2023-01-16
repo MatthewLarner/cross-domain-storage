@@ -3,7 +3,7 @@ const getId = require('../getId');
 const prefix = 'sessionAccessId-';
 
 function createId() {
-    return prefix + Date.now();
+    return prefix + (Math.random() * Date.now());
 }
 
 module.exports = function storageGuest(source, parent) {
