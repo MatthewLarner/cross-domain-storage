@@ -1,5 +1,5 @@
 {
-    "name": "@midorina/cross-domain-storage",
+    "name": "cross-domain-storage",
     "version": "2.0.7",
     "description": "Cross domain local storage",
     "main": "./",
@@ -26,14 +26,14 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Midorina/cross-domain-storage.git"
+        "url": "git+https://github.com/MatthewLarner/cross-domain-storage.git"
     },
     "author": "Matt Larner <matt.larner.dev@gmail.com>",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/Midorina/cross-domain-storage/issues"
+        "url": "https://github.com/MatthewLarner/cross-domain-storage/issues"
     },
-    "homepage": "https://github.com/Midorina/cross-domain-storage#readme",
+    "homepage": "https://github.com/MatthewLarner/cross-domain-storage#readme",
     "dependencies": {},
     "devDependencies": {
         "babel-cli": "^6.26.0",
